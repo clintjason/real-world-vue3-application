@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import EventCard from "@/components/EventCard";
+import EventDetails from "@/views/EventDetails";
+
 const routes = [
   {
     path: "/",
@@ -9,8 +11,14 @@ const routes = [
   },
   {
     path: "/events",
-    name: "Events",
+    name: "EventCard",
     component: EventCard,
+  },
+  {
+    path: "/event/:id",
+    name: "EventDetails",
+    props: true, //This gives the prop access to the component
+    component: EventDetails,
   },
   {
     path: "/about",
