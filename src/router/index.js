@@ -15,6 +15,12 @@ const routes = [
     component: EventCard,
   },
   {
+    path: "/test/:page",
+    name: "Test",
+    props: (route) => ({ showExtra: route.query.e || false, page: route.params.page }),
+    component: ()=> import("../views/Test.vue"),
+  },
+  {
     path: "/event/:id",
     name: "EventDetails",
     props: true, //This gives the prop access to the component
@@ -23,6 +29,7 @@ const routes = [
   {
     path: "/about",
     name: "About",
+    props: { showExtra: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
