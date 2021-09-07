@@ -38,7 +38,7 @@ export default {
        .then(response => {
          console.log(response);
          this.events = response.data;
-         this.totalEvents = response.header['x-total-count']
+         this.totalEvents = response.headers['x-total-count']
         })
         .catch(error=>{ console.error(error);})
      })
@@ -46,6 +46,7 @@ export default {
    computed: {
      hasNextPage() {
        let totalPages = Math.ceil(this.totalEvents / 2);
+       console.log(totalPages);
        return this.page < totalPages;
      }
    }
