@@ -5,6 +5,7 @@ import EventDetails from "@/views/event/Details";
 import EventRegister from "@/views/event/Register";
 import EventEdit from "@/views/event/Edit";
 import EventLayout from "@/views/event/Layout";
+import NotFound from "@/views/NotFound";
 
 const routes = [
   {
@@ -75,6 +76,22 @@ const routes = [
   {
     path:'/about',
     redirect: { name: 'About'}
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: NotFound
+  },
+  {
+    path: '/404/:resource',
+    props: true,
+    name: '404Resource',
+    component: NotFound
+  },
+  {
+    path: '/network-error',
+    name: 'NetworkError',
+    component: () => import('@/views/NetworkError')
   }
 ];
 
