@@ -24,8 +24,9 @@ const routes = [
     props: (route) => ({ showExtra: route.query.e || false, page: route.params.page }),
     component: ()=> import("../views/Test.vue"),
   },
+  
   {
-    path: "/event/:id",
+    path: "/events/:id",
     name: "EventLayout",
     props: true, //This gives the prop access to the component
     component: EventLayout,
@@ -47,17 +48,34 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/event/:afterEvent(.*)',
+    redirect: to => ({ path: '/events/' + to.params.afterEvent})
+  }
+  /* {
+    path: '/event/:id',
+    redirect: {name: "EventDetails"},
+    children: [
+      {path:'register', redirect: {name: 'EventRegister'}},
+      {path:'edit', redirect: {name: 'EventEdit'}},
+    ]
+  } */,
   
   {
-    path: "/about",
+    path: "/about-us",
     name: "About",
     props: { showExtra: true },
+    //alias: '/about',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
+  {
+    path:'/about',
+    redirect: { name: 'About'}
+  }
 ];
 
 const router = createRouter({
