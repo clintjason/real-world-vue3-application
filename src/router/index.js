@@ -8,7 +8,7 @@ import EventLayout from "@/views/event/Layout";
 import NotFound from "@/views/NotFound";
 import NProgress from "nprogress";
 import EventService from "@/services/EventService.js";
-import Gstore from "@/store";
+import GStore from "@/store";
 
 const routes = [
   {
@@ -37,7 +37,7 @@ const routes = [
     beforeEnter: to => {
       return EventService.getEvent(to.params.id)
       .then(response => {
-        Gstore.event = response.data;
+        GStore.event = response.data;
         })
         .catch(error=>{ 
           console.error(error);
@@ -64,6 +64,7 @@ const routes = [
       {
         path: "edit",
         name: "EventEdit",
+        meta: { requireAuth: true },
         component: EventEdit,
       },
     ]
@@ -117,10 +118,31 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) { // <----
+      return savedPosition
+    } else {
+      return { top: 0 } // always scroll to top if there is not a saved position
+    }
+  }
 });
 // Before navigation starts and component route guard
-router.beforeEach(()=>{
+router.beforeEach((to,from)=>{
   NProgress.start();
+  const notAuthorized = true
+  if (to.meta.requireAuth && notAuthorized) {
+    GStore.flashMessage = 'Sorry, you are not authorized to view this page'
+
+    setTimeout(() => {
+      GStore.flashMessage = ''
+    }, 3000)
+
+    if (from.href) { // <--- If this navigation came from a previous page.
+      return false
+    } else {  // <--- Must be navigating directly
+      return { path: '/' }  // <--- Push navigation to the root route.
+    }
+  }
 })
 // After navigation completes
 router.afterEach(()=>{
