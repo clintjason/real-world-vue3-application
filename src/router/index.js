@@ -1,14 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
-import EventCard from "@/components/EventCard";
-import EventDetails from "@/views/event/Details";
-import EventRegister from "@/views/event/Register";
-import EventEdit from "@/views/event/Edit";
-import EventLayout from "@/views/event/Layout";
-import NotFound from "@/views/NotFound";
 import NProgress from "nprogress";
-import EventService from "@/services/EventService.js";
-import GStore from "@/store";
+
+// lAZY COMPONENT LOADING
+
+const Home = () => import(/* webpackChunkName: "Home" */"@/views/Home.vue");
+const EventCard = () => import(/* webpackChunkName: "EventCard" */"@/components/EventCard");
+const EventDetails = () => import(/* webpackChunkName: "EventDetails" */"@/views/event/Details");
+const EventRegister = () => import(/* webpackChunkName: "EventRegister" */"@/views/event/Register");
+const EventEdit = () => import(/* webpackChunkName: "EventEdit" */"@/views/event/Edit");
+const EventLayout = () => import(/* webpackChunkName: "EventLayout" */"@/views/event/Layout");
+const NotFound = () => import(/* webpackChunkName: "NotFound" */"@/views/NotFound");
+const EventService = () => import(/* webpackChunkName: "EventService" */"@/services/EventService.js");
+const GStore = () => import(/* webpackChunkName: "GStore" */"@/store");
+const About = () => 
+import(/* webpackChunkName: "about" */ "../views/About.vue");
 
 const routes = [
   {
@@ -90,8 +95,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    component: About
   },
   {
     path:'/about',
