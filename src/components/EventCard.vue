@@ -18,7 +18,9 @@
 <script>
 import Event from "@/components/Event";
 import EventService from "@/services/EventService.js";
-import {watchEffect} from "vue";
+//import NProgress from 'nprogress' // <---
+
+//import {watchEffect} from "vue"; // listens to component update
 export default {
   name: 'EventCard',
   props: ['page'],
@@ -31,7 +33,7 @@ export default {
       totalEvents:0
      }
    },
-   created() {
+   /* created() {
      watchEffect(()=> {
        //this.events = null;
        EventService.getEvents(2,this.page)
@@ -45,7 +47,42 @@ export default {
           this.$router.push({name: 'NetworkError'})
           })
      })
-   },
+   }, */
+   beforeRouteEnter(routeTo, routeFrom, next) {
+    //NProgress.start()
+    EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+      .then(response => {
+        // next here tells the router to wait until the api call returns
+        // before moving to the route and parsing the data
+        next(comp => {
+          comp.events = response.data
+          comp.totalEvents = response.headers['x-total-count']
+        })
+      })
+      .catch(() => {
+        next({ name: 'NetworkError' }) 
+      })
+      /* .finally(() => {
+        NProgress.done()
+      }) */
+  },
+  beforeRouteUpdate(routeTo) {
+    //NProgress.start()
+    // the return here serves as next above. It tells the router to wait
+    // the API call is finished
+    return EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+      .then(response => {
+        this.events = response.data // <-----
+        this.totalEvents = response.headers['x-total-count'] // <-----
+        //next() // <----- return to the next route by default
+      })
+      .catch(() => {
+        return { name: 'NetworkError' } // go to the network error
+      })
+      /* .finally(() => {
+        NProgress.done();
+      }) */
+  },
    computed: {
      hasNextPage() {
        let totalPages = Math.ceil(this.totalEvents / 2);

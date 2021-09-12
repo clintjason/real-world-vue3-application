@@ -1,6 +1,6 @@
 <template>
-  <div v-if="event">
-    <h1>{{ event.title }}</h1>
+  <div v-if="GStore.event">
+    <h1>{{ GStore.event.title }}</h1>
     <div id="nav">
       <router-link :to="{ name: 'EventDetails'}"
         >Details</router-link
@@ -14,22 +14,17 @@
         >Edit</router-link
       >
     </div>
-    <router-view :event="event" />
+    <router-view :event="GStore.event" />
   </div>
 </template>
 
 <script>
-import EventService from "@/services/EventService";
+//import EventService from "@/services/EventService";
 
 export default {
     name: "EventLayout",
-    props: ['id'],
-  data() {
-    return {
-      event: null
-    }
-  },
-  created() {
+    inject: ['GStore'],
+  /* created() {
     // fetch event (by id) and set local event data
     EventService.getEvent(this.id)
      .then(response => {
@@ -45,6 +40,6 @@ export default {
         }
         this.$router.push({name: 'NetworkError'})
     })
-  }
+  } */
 }
 </script>

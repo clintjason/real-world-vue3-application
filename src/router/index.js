@@ -6,6 +6,9 @@ import EventRegister from "@/views/event/Register";
 import EventEdit from "@/views/event/Edit";
 import EventLayout from "@/views/event/Layout";
 import NotFound from "@/views/NotFound";
+import NProgress from "nprogress";
+import EventService from "@/services/EventService.js";
+import Gstore from "@/store";
 
 const routes = [
   {
@@ -31,6 +34,22 @@ const routes = [
     name: "EventLayout",
     props: true, //This gives the prop access to the component
     component: EventLayout,
+    beforeEnter: to => {
+      return EventService.getEvent(to.params.id)
+      .then(response => {
+        Gstore.event = response.data;
+        })
+        .catch(error=>{ 
+          console.error(error);
+          if(error.response && error.response.Status == 404) {
+              return {
+                  name: '404Resource',
+                  params: {resource: 'event'}
+              }
+          }
+          return {name: 'NetworkError'}
+      })
+    },
     children: [
       {
         path: "",
@@ -99,5 +118,13 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+// Before navigation starts and component route guard
+router.beforeEach(()=>{
+  NProgress.start();
+})
+// After navigation completes
+router.afterEach(()=>{
+  NProgress.done();
+})
 
 export default router;
